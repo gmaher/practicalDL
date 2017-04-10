@@ -13,22 +13,29 @@ class FCLayer:
         self.shape = shape
         self.activation = activation
 
-        self.W = np.random.randn(shape)*init
-        self.b = np.random.randn(shape[1])*init
+        self.weights = []
+        self.weights.append(np.random.randn(shape)*init)
+        self.weights.append(np.random.randn(shape[1])*init)
+
+        if activation == 'relu':
+            self.activation = ReLU()
 
     def forward(self,x):
         """
         compute a fully-connected forward pass on x
 
         inputs:
-            -x, (vector), 1D vector, with size self.shape[0], input to the layer
+            -x, (numpy array), with size (batch size, self.shape[0])
+                , input to the layer
 
         returns:
-            -out, (vector), 1D vector  with size self.shape[1], layer output
+            -out, (numpy array),  with size (batch size, self.shape[1]),
+            layer output
         """
 
-        self.output = self.W.dot(x)+self.b
-        return self.output
+        self.h = self.weights[0].dot(x)+self.weights[1]
+        self.a = self.activation.forward(self.h)
+        return self.a
 
     def gradient(self,delta):
         """
