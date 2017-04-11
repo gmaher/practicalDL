@@ -14,7 +14,7 @@ class FCLayer:
         self.activation = activation
 
         self.weights = []
-        self.weights.append(np.random.randn(shape[1],shape[0])*init)
+        self.weights.append(np.random.randn(shape[0],shape[1])*init)
         self.weights.append(np.random.randn(shape[1])*init)
 
         if activation == 'relu':
@@ -35,7 +35,7 @@ class FCLayer:
             layer output
         """
 
-        self.h = self.weights[0].dot(x)+self.weights[1]
+        self.h = x.dot(self.weights[0])+self.weights[1]
         self.a = self.activation.forward(self.h)
         return self.a
 
@@ -52,8 +52,8 @@ class FCLayer:
         """
         dlda = self.activation.gradient(delta)
 
-        dldw = dlda.dot(self.a.T)
+        dldw = self.a.dot(dlda.T)
         dldb = dlda
 
-        dldx = dlda.dot(self.weights[0])
+        dldx = dlda.dot(self.weights[0].T)
         return (dlda,dldw,dldx)

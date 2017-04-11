@@ -28,10 +28,9 @@ class ReLU:
         calculate ReLU gradient
 
         inputs:
-            - delta, (numpy array), size is (batch size,1,xdim)
+            - delta, (numpy array), size is (batch size,xdim)
 
         returns:
-            gradient, (numpy array), size is (batch size,1,xdim)
+            gradient, (numpy array), size is (batch size,xdim)
         """
-        return np.transpose(self.multiplier,
-            axes=self.multiplier.shape[1:])*delta
+        return self.multiplier*delta
