@@ -4,7 +4,6 @@ class FCLayer:
     def __init__(self,shape,activation,init=1e-3):
         """
         initializer for a fully-connected layer
-
         inputs:
             -shape, (tuple), input,output size of layer
             -activation, (string), activation function to use
@@ -25,13 +24,11 @@ class FCLayer:
     def forward(self,x):
         """
         compute a fully-connected forward pass on x
-
         inputs:
-            -x, (numpy array), with size (batch size, self.shape[0],1)
+            -x, (numpy array), with size (batch size, self.shape[0])
                 , input to the layer
-
         returns:
-            -out, (numpy array),  with size (batch size, self.shape[1],1),
+            -out, (numpy array),  with size (batch size, self.shape[1]),
             layer output
         """
 
@@ -42,18 +39,16 @@ class FCLayer:
     def gradient(self,delta):
         """
         Compute the fully-connected layer gradient
-
         inputs:
             -delta, (vector), the upstream derivative, size is
-            (batch size, 1, self.shape[1])
-
+            (batch size, self.shape[1])
         returns:
             -grad, (tuple), tuple contain derivative wrt to W, b and x
         """
         dlda = self.activation.gradient(delta)
 
-        dldw = self.a.dot(dlda.T)
+        dldw = dlda.T.dot(self.a)
         dldb = dlda
-
         dldx = dlda.dot(self.weights[0].T)
+
         return (dlda,dldw,dldx)
