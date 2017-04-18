@@ -34,3 +34,30 @@ class ReLU:
             gradient, (numpy array), size is (batch size,xdim)
         """
         return self.multiplier*delta
+
+class Sigmoid:
+    def forward(self,x):
+        """
+        Computes forward pass of Sigmoid activation
+
+        inputs:
+            -x,(numpy array), size is (batch size, xdim, 1)
+
+        returns:
+            -output, (numpy array),1/(1+e^{-x}) applied to x, same dimensions
+        """
+
+        self.output = 1.0/(1+np.exp(-x))
+        return self.output
+
+    def gradient(self,delta):
+        """
+        calculate ReLU gradient
+
+        inputs:
+            - delta, (numpy array), size is (batch size,xdim)
+
+        returns:
+            gradient, (numpy array), size is (batch size,xdim)
+        """
+        return delta*self.output*(1.0-self.output)
