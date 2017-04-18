@@ -20,6 +20,8 @@ class FCLayer:
 
         if activation == 'relu':
             self.activation = tf.nn.relu
+        elif activation == 'sigmoid':
+            self.activation = tf.nn.sigmoid
         else:
             self.activation = tf.identity
 
