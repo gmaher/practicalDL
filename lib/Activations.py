@@ -12,7 +12,7 @@ class ReLU:
         Computes forward pass of ReLU activation
 
         inputs:
-            -x,(numpy array), size is (batch size, xdim, 1)
+            -x,(numpy array), size is (batch size, xdim)
 
         returns:
             -output, (numpy array), max(0,x) applied to x, same dimensions
@@ -28,11 +28,12 @@ class ReLU:
         calculate ReLU gradient
 
         inputs:
-            - delta, (numpy array), size is (batch size,xdim)
+            - delta, (numpy array), size is (batch_size,xdim)
 
         returns:
             gradient, (numpy array), size is (batch size,xdim)
         """
+        out = self.multiplier*delta
         return self.multiplier*delta
 
 class Sigmoid:
@@ -41,7 +42,7 @@ class Sigmoid:
         Computes forward pass of Sigmoid activation
 
         inputs:
-            -x,(numpy array), size is (batch size, xdim, 1)
+            -x,(numpy array), size is (batch size, xdim)
 
         returns:
             -output, (numpy array),1/(1+e^{-x}) applied to x, same dimensions
@@ -60,4 +61,5 @@ class Sigmoid:
         returns:
             gradient, (numpy array), size is (batch size,xdim)
         """
+        out = delta*self.output*(1.0-self.output)
         return delta*self.output*(1.0-self.output)

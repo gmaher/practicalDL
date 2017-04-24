@@ -1,5 +1,5 @@
 import numpy as np
-from Activations import ReLU, Linear
+from Activations import ReLU, Sigmoid, Linear
 class FCLayer:
     def __init__(self,shape,activation,init=1e-3):
         """
@@ -15,9 +15,11 @@ class FCLayer:
         self.weights = []
         self.weights.append(np.random.randn(shape[0],shape[1])*init)
         self.weights.append(np.random.randn(shape[1])*init)
-
+        print activation
         if activation == 'relu':
             self.activation = ReLU()
+        elif activation == 'sigmoid':
+            self.activation = Sigmoid()
         else:
             self.activation = Linear()
 
@@ -31,7 +33,7 @@ class FCLayer:
             -out, (numpy array),  with size (batch size, self.shape[1]),
             layer output
         """
-
+        self.x = x
         self.h = x.dot(self.weights[0])+self.weights[1]
         self.a = self.activation.forward(self.h)
         return self.a
@@ -47,8 +49,8 @@ class FCLayer:
         """
         dlda = self.activation.gradient(delta)
 
-        dldw = dlda.T.dot(self.a)
-        dldb = dlda
+        dldw = self.x.T.dot(dlda)
+        dldb = np.mean(dlda, axis=0, keepdims=True)
         dldx = dlda.dot(self.weights[0].T)
 
-        return (dlda,dldw,dldx)
+        return (dldb,dldw),dldx
