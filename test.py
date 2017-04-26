@@ -3,7 +3,7 @@ import numpy as np
 
 fc = FCLayer.FCLayer((10,20),'relu')
 fc2 = FCLayer.FCLayer((20,2),'sigmoid')
-fc3 = FCLayer.FCLayer((2,4),'linear')
+fc3 = FCLayer.FCLayer((2,4),'softmax')
 x = np.random.randn(100,10)
 y = np.ones((100,4))
 delta = np.random.randn(100,20)

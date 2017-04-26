@@ -1,5 +1,5 @@
 import numpy as np
-from Activations import ReLU, Sigmoid, Linear
+from Activations import ReLU, Sigmoid, Linear, Softmax
 class FCLayer:
     def __init__(self,shape,activation,init=1e-3):
         """
@@ -20,6 +20,8 @@ class FCLayer:
             self.activation = ReLU()
         elif activation == 'sigmoid':
             self.activation = Sigmoid()
+        elif activation == 'softmax':
+            self.activation = Softmax()
         else:
             self.activation = Linear()
 
