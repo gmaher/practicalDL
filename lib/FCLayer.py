@@ -49,10 +49,14 @@ class FCLayer:
         returns:
             -grad, (tuple), tuple contain derivative wrt to W, b and x
         """
+        batch_size = delta.shape[0]
         dlda = self.activation.gradient(delta)
 
-        dldw = self.x.T.dot(dlda)
+        dldw = self.x.T.dot(dlda)/batch_size
         dldb = np.mean(dlda, axis=0, keepdims=True)
         dldx = dlda.dot(self.weights[0].T)
 
-        return (dldb,dldw),dldx
+        print 'x {}, delta {}, dlda {}, dldw {}, dldb {}, dldx {}'.format(
+            self.x.shape, delta.shape, dlda.shape, dldw.shape, dldb.shape, dldx.shape
+        )
+        return (dldw,dldb),dldx

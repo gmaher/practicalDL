@@ -6,8 +6,8 @@ class MSE:
         return self.loss
 
     def gradient(self,ytrue,ypredicted):
-        self.gradient = -2*(ytrue-ypredicted)
-        return self.gradient
+        self.grad = -2.0/(np.prod(ytrue.shape))*(ytrue-ypredicted)
+        return self.grad
 #
 # class BinaryCrossEntropy:
 #     def forward(self, ytrue, ypredicted):

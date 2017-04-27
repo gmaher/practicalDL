@@ -34,6 +34,10 @@ class ReLU:
             gradient, (numpy array), size is (batch size,xdim)
         """
         out = self.multiplier*delta
+        print 'relu delta shape = {}'.format(delta.shape)
+        print 'relu multiplier shape = {}'.format(self.multiplier.shape)
+        print 'relu out shape = {}'.format(out.shape)
+        print self.multiplier[0]
         return self.multiplier*delta
 
 class Sigmoid:
@@ -77,8 +81,8 @@ class Softmax:
         """
 
         xmax = np.amax(x, axis=1, keepdims=True)
-        e = x-xmax
-        self.output = np.exp(e)/(np.sum(e, axis=1, keepdims=True))
+        e = np.exp(x-xmax)
+        self.output = e/(np.sum(e, axis=1, keepdims=True))
         return self.output
 
     def gradient(self,delta):
@@ -96,7 +100,7 @@ class Softmax:
         dy = np.zeros((batch_size,out_dim,out_dim))
         diags = range(out_dim)
         for i in range(batch_size):
-            dy[i] = (-out[i,:]).T.dot(out[i,:])
+            dy[i] = (-out[i,:, np.newaxis]).dot(out[i,np.newaxis,:])
 
         dy[:,diags,diags] = out*(1-out)
         d = np.zeros((batch_size,out_dim))
