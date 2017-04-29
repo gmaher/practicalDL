@@ -3,21 +3,23 @@ from Activations import *
 import FCLayer
 EPS = 1e-4
 mse = MSE()
-x = np.random.rand(1,3)*0.5
-y = np.ones_like(x)*0.75
+x = np.random.rand(2,3)*0.5
+y = np.zeros_like(x)
+y[:,1] = 1.0
 
 def loss_num_grad(loss,x,y):
-    delta_num = np.zeros_like(delta_mse)
+    delta_num = np.zeros_like(y)
     l = loss.forward(y,x)
-    for i in range(x.shape[1]):
-        x2 = x.copy()
-        x2[0,i] += EPS
-        lnew = loss.forward(y,x2)
-        x2[0,i]-= 2*EPS
-        lnew2 = loss.forward(y,x2)
-        d = (lnew-lnew2)/(2*EPS)
-        delta_num[0,i] = d
-        x2 = x.copy()
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
+            x2 = x.copy()
+            x2[i,j] += EPS
+            lnew = loss.forward(y,x2)
+            x2[i,j]-= 2*EPS
+            lnew2 = loss.forward(y,x2)
+            d = (lnew-lnew2)/(2*EPS)
+            delta_num[i,j] = d
+            x2 = x.copy()
     return delta_num.copy()
 
 delta_mse = mse.gradient(y,x)
@@ -36,18 +38,20 @@ cce_num = loss_num_grad(cce,x,y)
 print "CategoricalCrossEntropy gradient error: {}".format(np.mean(np.abs(delta_cce-cce_num)))
 
 def activation_num_grad(act,loss,x,y):
-    for i in range(x.shape[1]):
-        x2 = x.copy()
-        x2[0,i] += EPS
-        yhat = act.forward(x2)
-        lnew = mse.forward(y,yhat)
+    delta_num = np.zeros_like(y)
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
+            x2 = x.copy()
+            x2[i,j] += EPS
+            yhat = act.forward(x2)
+            lnew = mse.forward(y,yhat)
 
-        x2[0,i]-= 2*EPS
-        yhat2 = act.forward(x2)
-        lnew2 = loss.forward(y,yhat2)
-        d = (lnew-lnew2)/(2*EPS)
-        delta_num[0,i] = d
-        x2 = x.copy()
+            x2[i,j]-= 2*EPS
+            yhat2 = act.forward(x2)
+            lnew2 = loss.forward(y,yhat2)
+            d = (lnew-lnew2)/(2*EPS)
+            delta_num[i,j] = d
+            x2 = x.copy()
 
     return delta_num.copy()
 

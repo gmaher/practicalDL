@@ -45,7 +45,7 @@ class BinaryCrossEntropy:
             - grad, (numpy array), size = nbatch x ydim, delta for back prop
         """
         self.grad = -1.0/(np.prod(ytrue.shape))*((ytrue-ypredicted)
-            /(ypredicted+EPS)*(1-ypredicted+EPS))
+            /((ypredicted+EPS)*(1-ypredicted+EPS)))
         return self.grad
 
 class CategoricalCrossEntropy:
