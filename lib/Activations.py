@@ -34,9 +34,6 @@ class ReLU:
             gradient, (numpy array), size is (batch size,xdim)
         """
         out = self.multiplier*delta
-        print 'relu delta shape = {}'.format(delta.shape)
-        print 'relu multiplier shape = {}'.format(self.multiplier.shape)
-        print 'relu out shape = {}'.format(out.shape)
         print self.multiplier[0]
         return self.multiplier*delta
 

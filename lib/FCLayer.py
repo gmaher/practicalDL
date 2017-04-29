@@ -15,7 +15,7 @@ class FCLayer:
         self.weights = []
         self.weights.append(np.random.randn(shape[0],shape[1])*init)
         self.weights.append(np.random.randn(shape[1])*init)
-        print activation
+
         if activation == 'relu':
             self.activation = ReLU()
         elif activation == 'sigmoid':
@@ -56,7 +56,4 @@ class FCLayer:
         dldb = np.mean(dlda, axis=0, keepdims=True)
         dldx = dlda.dot(self.weights[0].T)
 
-        print 'x {}, delta {}, dlda {}, dldw {}, dldb {}, dldx {}'.format(
-            self.x.shape, delta.shape, dlda.shape, dldw.shape, dldb.shape, dldx.shape
-        )
         return (dldw,dldb),dldx
