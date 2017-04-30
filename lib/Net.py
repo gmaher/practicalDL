@@ -19,7 +19,6 @@ class Net:
         gradients = [0]*len(self.layers)
 
         for i in range(len(self.layers)-1,-1,-1):
-            print i
             layer_gradients,delta = self.layers[i].gradient(delta)
             gradients[i] = layer_gradients
 

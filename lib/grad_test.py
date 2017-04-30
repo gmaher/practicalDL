@@ -1,6 +1,9 @@
 from Loss import *
 from Activations import *
 import FCLayer
+import SGD
+import Net
+
 EPS = 1e-4
 mse = MSE()
 x = np.random.rand(2,3)*0.5
@@ -102,10 +105,64 @@ def numerical_gradient(layer,loss,x,y):
             num_grad[i,j] = d
             W_new = W.copy()
 
-    return num_grad.copy()
+    b_grad = np.zeros_like(layer.weights[1])
+    b_new = b.copy()
+    for i in range(len(b_grad)):
+        b_new[i] += EPS
+        layer.weights[1] = b_new
+        ynew = layer.forward(x)
+        loss_new = loss.forward(y,ynew)
+        b_new[i] -= 2*EPS
+        layer.weights[1] = b_new
+        ynew = layer.forward(x)
+        loss_new2 = loss.forward(y,ynew)
+        d = (loss_new-loss_new2)/(2*EPS)
+        b_grad[i] = d
+        b_new = b.copy()
 
-num_grad = numerical_gradient(fc, mse, x, y)
+    delta_num = np.zeros_like(y)
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
+            x2 = x.copy()
+            x2[i,j] += EPS
+            yhat = layer.forward(x2)
+            lnew = loss.forward(y,yhat)
+
+            x2[i,j]-= 2*EPS
+            yhat2 = layer.forward(x2)
+            lnew2 = loss.forward(y,yhat2)
+            d = (lnew-lnew2)/(2*EPS)
+            delta_num[i,j] = d
+            x2 = x.copy()
+
+    return num_grad.copy(), b_grad.copy(), delta_num.copy()
+
+num_grad, num_b, num_x = numerical_gradient(fc, mse, x, y)
 yhat = fc.forward(x)
 delta = mse.gradient(y,yhat)
-grad = fc.gradient(delta)[0][0]
-print "Fully-connect layer gradient error = {}".format(np.mean(np.abs(num_grad-grad)))
+grad, dx = fc.gradient(delta)
+dw = grad[0]
+db = grad[1]
+print "Fully-connect layer gradient error = {}".format(np.mean(np.abs(num_grad-dw)))
+print "Fully-connect layer gradient error b = {}".format(np.mean(np.abs(num_b-db)))
+print "Fully-connect layer gradient error x = {}".format(np.mean(np.abs(num_x-dx)))
+
+#Test optimizers
+fc = FCLayer.FCLayer((10,20),'relu')
+fc2 = FCLayer.FCLayer((20,2),'sigmoid')
+fc3 = FCLayer.FCLayer((2,4),'softmax')
+x = np.random.randn(100,10)
+y = np.zeros((100,4))
+inds = np.random.randint(4,size=100)
+y[:,inds] = 1.0
+
+net = Net.Net()
+net.addLayer(fc)
+net.addLayer(fc2)
+net.addLayer(fc3)
+
+sgd = SGD.SGD(net,momentum=0.9)
+for i in range(10000):
+    l = sgd.step(net,cce,x,y, learning_rate=1e-1)
+    if i%1000==0:
+        print 'SGD iteration {}: loss={}'.format(i,l)

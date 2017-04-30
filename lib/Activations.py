@@ -34,7 +34,6 @@ class ReLU:
             gradient, (numpy array), size is (batch size,xdim)
         """
         out = self.multiplier*delta
-        print self.multiplier[0]
         return self.multiplier*delta
 
 class Sigmoid:

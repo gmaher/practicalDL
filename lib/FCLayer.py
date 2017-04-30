@@ -14,7 +14,7 @@ class FCLayer:
 
         self.weights = []
         self.weights.append(np.random.randn(shape[0],shape[1])*init)
-        self.weights.append(np.random.randn(shape[1])*init)
+        self.weights.append(np.random.randn(1,shape[1])*init)
 
         if activation == 'relu':
             self.activation = ReLU()
@@ -52,8 +52,8 @@ class FCLayer:
         batch_size = delta.shape[0]
         dlda = self.activation.gradient(delta)
 
-        dldw = self.x.T.dot(dlda)/batch_size
-        dldb = np.mean(dlda, axis=0, keepdims=True)
+        dldw = self.x.T.dot(dlda)
+        dldb = np.sum(dlda, axis=0, keepdims=True)
         dldx = dlda.dot(self.weights[0].T)
 
         return (dldw,dldb),dldx
