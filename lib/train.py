@@ -88,7 +88,7 @@ def train(net,loss,X,Y,X_test,Y_test,
     output['test_loss'] = []
     for i in range(num_iter):
         x,y = get_batch(X,Y,batch_size)
-        l_train = optimizer.step(net,loss,x,y, learning_rate=learning_rate)
+        l_train = optimizer.step(loss,x,y, learning_rate=learning_rate)
 
         if i%50 == 0:
             yhat_test = net.forward(X_test)
