@@ -107,17 +107,17 @@ def numerical_gradient(layer,loss,x,y):
 
     b_grad = np.zeros_like(layer.weights[1])
     b_new = b.copy()
-    for i in range(len(b_grad)):
-        b_new[i] += EPS
+    for i in range(b_grad.shape[1]):
+        b_new[0,i] += EPS
         layer.weights[1] = b_new
         ynew = layer.forward(x)
         loss_new = loss.forward(y,ynew)
-        b_new[i] -= 2*EPS
+        b_new[0,i] -= 2*EPS
         layer.weights[1] = b_new
         ynew = layer.forward(x)
         loss_new2 = loss.forward(y,ynew)
         d = (loss_new-loss_new2)/(2*EPS)
-        b_grad[i] = d
+        b_grad[0,i] = d
         b_new = b.copy()
 
     delta_num = np.zeros_like(y)
