@@ -58,8 +58,9 @@ class CategoricalCrossEntropy:
         returns:
             - loss, float, the categorical cross entropy across all dimensions
         """
+        Ntrain = ytrue.shape[0]
         self.inds = np.argmax(ytrue,axis=(1))
-        preds = ypredicted[:,self.inds]
+        preds = ypredicted[np.arange(0,Ntrain),self.inds]
         self.loss = -np.mean(np.log(preds+EPS))
         return self.loss
     def gradient(self, ytrue, ypredicted):
@@ -70,7 +71,27 @@ class CategoricalCrossEntropy:
         returns:
             - grad, (numpy array), size = nbatch x ydim, delta for back prop
         """
+        Ntrain = ytrue.shape[0]
         self.grad = np.zeros_like(ytrue)
         inds = self.inds
-        self.grad[:,inds] = -1.0/(ytrue.shape[0])*1.0/(ypredicted[:,inds]+EPS)
+
+        self.grad[np.arange(0,Ntrain),inds] =\
+         -1.0/(ytrue.shape[0])*1.0/(ypredicted[np.arange(0,Ntrain),inds]+EPS)
+
         return self.grad
+
+class SoftmaxCrossEntropy:
+    def forward(self, ytrue, ypredicted):
+        Ntrain = ytrue.shape[0]
+        ymax = np.amax(ypredicted,axis=1,keepdims=True)
+        e = np.exp(ypredicted-ymax)
+        self.p = e/np.sum(e,axis=1,keepdims=True)
+        self.inds = np.argmax(ytrue,axis=1)
+        self.loss = -np.mean(np.log(self.p[np.arange(0,Ntrain),self.inds]+EPS))
+        return self.loss
+
+    def gradient(self,ytrue,ypredicted):
+        Ntrain = ytrue.shape[0]
+        d = self.p
+        d[np.arange(0,Ntrain),self.inds] -= 1.0
+        return 1.0/(ytrue.shape[0])*d.copy()

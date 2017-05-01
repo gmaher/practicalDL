@@ -17,9 +17,9 @@ Y_test = dataset.test.labels
 Y_test_1hot = np.eye(Y_test.max()+1)[Y_test]
 
 #Create neural network
-layer_1 = FCLayer.FCLayer(shape=(X_train.shape[1],2), activation='relu')
-layer_2 = FCLayer.FCLayer(shape=(2,2), activation='relu')
-layer_3 = FCLayer.FCLayer(shape=(2,Y_train.max()+1), activation='softmax')
+layer_1 = FCLayer.FCLayer(shape=(X_train.shape[1],300), activation='relu')
+layer_2 = FCLayer.FCLayer(shape=(300,100), activation='relu')
+layer_3 = FCLayer.FCLayer(shape=(100,Y_train.max()+1), activation='softmax')
 
 net = Net.Net()
 net.addLayer(layer_1)
@@ -27,6 +27,7 @@ net.addLayer(layer_2)
 net.addLayer(layer_3)
 
 #Set up loss function and train
+#loss = Loss.SoftmaxCrossEntropy()
 loss = Loss.CategoricalCrossEntropy()
 output = train.train(net,loss,
     X_train,Y_train_1hot,X_test,Y_test_1hot, num_iter=10000, learning_rate=1e-2)

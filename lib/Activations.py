@@ -78,7 +78,9 @@ class Softmax:
 
         xmax = np.amax(x, axis=1, keepdims=True)
         e = np.exp(x-xmax)
+
         self.output = e/(np.sum(e, axis=1, keepdims=True))
+
         return self.output
 
     def gradient(self,delta):
@@ -91,6 +93,7 @@ class Softmax:
         returns:
             gradient, (numpy array), size is (batch size,xdim)
         """
+        Ntrain = delta.shape[0]
         out = self.output
         batch_size,out_dim = out.shape
         dy = np.zeros((batch_size,out_dim,out_dim))

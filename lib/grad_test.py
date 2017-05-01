@@ -40,6 +40,12 @@ delta_cce = cce.gradient(y,x)
 cce_num = loss_num_grad(cce,x,y)
 print "CategoricalCrossEntropy gradient error: {}".format(np.mean(np.abs(delta_cce-cce_num)))
 
+sce = SoftmaxCrossEntropy()
+l = sce.forward(y,x)
+delta_sce = sce.gradient(y,x)
+sce_num = loss_num_grad(sce,x,y)
+print "SoftmaxCrossEntropy gradient error: {}".format(np.mean(np.abs(delta_sce-sce_num)))
+
 def activation_num_grad(act,loss,x,y):
     delta_num = np.zeros_like(y)
     for i in range(x.shape[0]):
@@ -160,9 +166,12 @@ net = Net.Net()
 net.addLayer(fc)
 net.addLayer(fc2)
 net.addLayer(fc3)
-
+yhat = net.forward(x)
+#print "yhat {}".format(yhat)
 sgd = SGD.SGD(net,momentum=0.9)
 for i in range(10000):
-    l = sgd.step(net,cce,x,y, learning_rate=1e-1)
+    l = sgd.step(cce,x,y, learning_rate=1e-1)
     if i%1000==0:
         print 'SGD iteration {}: loss={}'.format(i,l)
+yhat = net.forward(x)
+print "yhat {}".format(yhat)
