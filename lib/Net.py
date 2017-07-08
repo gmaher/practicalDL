@@ -7,10 +7,13 @@ class Net:
     def addLayer(self,layer):
         self.layers.append(layer)
 
-    def forward(self,x):
+    def forward(self,x, N=None):
         o = self.layers[0].forward(x)
 
-        for i in range(1,len(self.layers)):
+        if N == None:
+            N = len(self.layers)
+
+        for i in range(1,N):
             o = self.layers[i].forward(o)
 
         return o

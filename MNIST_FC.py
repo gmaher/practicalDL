@@ -27,7 +27,6 @@ net.addLayer(layer_2)
 net.addLayer(layer_3)
 
 #Set up loss function and train
-#loss = Loss.SoftmaxCrossEntropy()
 loss = Loss.CategoricalCrossEntropy()
 output = train.train(net,loss,
     X_train,Y_train_1hot,X_test,Y_test_1hot, num_iter=10000, learning_rate=1e-2)

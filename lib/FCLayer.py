@@ -53,7 +53,7 @@ class FCLayer:
         dlda = self.activation.gradient(delta)
 
         dldw = self.x.T.dot(dlda)
-        dldb = np.sum(dlda, axis=0, keepdims=True)
+        dldb = np.sum(dlda, axis=0, keepdims=True)/
         dldx = dlda.dot(self.weights[0].T)
 
         return (dldw,dldb),dldx
