@@ -4,3 +4,4 @@
 ./MNIST_data/*
 *.tar.gz
 *.gz
+image_classification/cifar-10-batches-py/
